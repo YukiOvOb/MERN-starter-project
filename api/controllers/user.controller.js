@@ -30,3 +30,24 @@ export const updateUser = async (req,res,next) => {
         next(error)
     }
 };
+
+export const deleteUser = async (req, res, next) =>{
+    if(req.user.id !== req.params.id)
+        return next(errorHandler(401,"你只能删除自己的账户！"))
+    try {
+        await User.findByIdAndDelete(req.params.id)
+        res.clearCookie('midas_access_token')
+        res.status(200).json('成功删除用户')
+    } catch (error) {
+        next(error)
+    }
+};
+
+export const signOut = async (req, res, next) =>{
+    try {
+        res.clearCookie('midas_access_token')
+        res.status(200).json('登出')
+    } catch (error) {
+        next(error)
+    }
+};
